@@ -1,8 +1,10 @@
+const concat = require("gulp-concat");
 const gulp = require("gulp");
 const less = require("gulp-less");
 const rename = require("gulp-rename");  // TODO delete
 const rimraf = require("gulp-rimraf");
 const runSequence = require("run-sequence");
+const uglify = require("gulp-uglify");
 const webpack = require("gulp-webpack");
 
 let DEV_MODE = false;
@@ -29,7 +31,13 @@ gulp.task("build", [ "clean" ], (cb) => {
 
 gulp.task("build-vendor", () => {
     // TODO
-    return;
+    return gulp.src([
+        "./node_modules/jquery/dist/jquery.js",
+        "./node_modules/jquery.transit/jquery.transit.js",
+        `${SRC_PATH}/lib/d3.min.js`
+    ]).pipe(uglify())
+      .pipe(concat("ventor.js"))
+      .pipe(gulp.dest(ASSETS_PATH));
 });
 
 gulp.task("build-less", () => {
