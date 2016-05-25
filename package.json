@@ -1,0 +1,19 @@
+{
+  "name": "d3.js-learning",
+  "version": "1.0.0",
+  "description": "Learning D3.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dongrenguang/d3.js-learning.git"
+  },
+  "author": "Dong, Renguang <dongrenguang@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dongrenguang/d3.js-learning/issues"
+  },
+  "homepage": "https://github.com/dongrenguang/d3.js-learning#readme"
+}
