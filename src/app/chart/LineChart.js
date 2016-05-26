@@ -45,24 +45,24 @@ export default class LineChart {
     }
 
     _renderAxisX() {
-        this.scaleX.domain(d3.extent(this.data, item => item[this.xPath]));
         if (this.axisXGroup === undefined) {
             this.axisXGroup = this.svg.append("g")
-                .classed("axis axisX", true)
+                .classed("axis axis-x", true)
                 .attr("transform", `translate(${this.margin.left}, ${this.height - this.margin.bottom})`);
         }
 
+        this.scaleX.domain(d3.extent(this.data, item => item[this.xPath]));
         this.axisXGroup.transition().duration(600).call(this.axisX);
     }
 
     _renderAxisY() {
-        this.scaleY.domain(d3.extent(this.data, item => item[this.yPath]));
         if (this.axisYGroup === undefined) {
             this.axisYGroup = this.svg.append("g")
-                .classed("axis axisY", true)
+                .classed("axis axis-y", true)
                 .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
         }
 
+        this.scaleY.domain(d3.extent(this.data, item => item[this.yPath]));
         this.axisYGroup.transition().duration(600).call(this.axisY);
     }
 
