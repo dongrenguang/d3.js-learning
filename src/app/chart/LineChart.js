@@ -1,66 +1,91 @@
 export default class LineChart {
     constructor(props) {
+        this.width = props.width;
+        this.height = props.height;
+        this.margin = props.margin;
+        this.initData = props.initData;
+        this.data = props.data;
+        this.xPath = props.xPath;
+        this.yPath = props.yPath;
 
+        this._init();
+        this._renderAxes();
+        this._renderBody();
+        this.render();
     }
 
     render() {
-        const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-        const width = 960 - margin.left - margin.right;
-        const height = 500 - margin.top - margin.bottom;
+        this._renderLine();
+    }
 
-        const x = d3.scale.linear().range([0, width]);
-        const y = d3.scale.linear().range([height, 0]);
-
-        const xAxis = d3.svg.axis()
-            .scale(x)
+    _init() {
+        this.scaleX = d3.scale.linear().domain(d3.extent(this.data, item => item[this.xPath])).range([ 0, this.width - this.margin.right - this.margin.left ]);
+        this.scaleY = d3.scale.linear().domain(d3.extent(this.data, item => item[this.yPath])).range([ this.height - this.margin.bottom - this.margin.top, 0 ]);
+        this.axisX = d3.svg.axis()
+            .scale(this.scaleX)
             .orient("bottom");
-
-        const yAxis = d3.svg.axis()
-            .scale(y)
+        this.axisY = d3.svg.axis()
+            .scale(this.scaleY)
             .orient("left");
+        this.line = d3.svg.line()
+            .interpolate("cardinal")
+            .tension(0.9)
+            .x(d => this.scaleX(d[this.xPath]))
+            .y(d => this.scaleY(d[this.yPath]));
 
-        const line = d3.svg.line()
-            .x(d => x(d.month))
-            .y(d => y(d.value));
+        this.svg = d3.select("body").append("svg")
+            .style("width", this.width)
+            .style("height", this.height)
+            .style("background-color", "rgba(0, 0, 0, 0.1)");
+    }
 
-        const svg = d3.select("body").append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-          .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .attr("class", "line-chart");
+    _renderAxes() {
+        this._renderAxisX();
+        this._renderAxisY();
+    }
 
-        const data = [
-            { month: 0, value: 2},
-            { month: 1, value: 4},
-            { month: 2, value: 5},
-            { month: 3, value: 6},
-            { month: 4, value: 7},
-            { month: 5, value: 9},
-            { month: 6, value: 6},
-            { month: 7, value: 4},
-            { month: 8, value: 3},
-            { month: 9, value: 1},
-            { month: 10, value: 4},
-            { month: 11, value: 6},
-            { month: 12, value: 3}
-        ];
+    _renderAxisX() {
+        this.scaleX.domain(d3.extent(this.data, item => item[this.xPath]));
+        if (this.axisXGroup === undefined) {
+            this.axisXGroup = this.svg.append("g")
+                .classed("axis axisX", true)
+                .attr("transform", `translate(${this.margin.left}, ${this.height - this.margin.bottom})`);
+        }
 
-        x.domain([0, 12]);
-        y.domain([10, 0]);
+        this.axisXGroup.transition().duration(600).call(this.axisX);
+    }
 
-        svg.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + height + ")")
-          .call(xAxis);
+    _renderAxisY() {
+        this.scaleY.domain(d3.extent(this.data, item => item[this.yPath]));
+        if (this.axisYGroup === undefined) {
+            this.axisYGroup = this.svg.append("g")
+                .classed("axis axisY", true)
+                .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
+        }
 
-        svg.append("g")
-          .attr("class", "y axis")
-          .call(yAxis);
+        this.axisYGroup.transition().duration(600).call(this.axisY);
+    }
 
-        svg.append("path")
-          .datum(data)
-          .attr("class", "line")
-          .attr("d", line);
+    _renderBody() {
+        this.bodyGroup = this.svg.append("g")
+            .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+            .classed("svg-body", true);
+    }
+
+    _renderLine() {
+        if (this.linePath === undefined) {
+            this.linePath = this.bodyGroup.append("path")
+                .classed("line", true)
+                .datum(this.data)
+                .attr("d", this.line(this.initData));
+        }
+
+        this._renderAxisX();
+        this._renderAxisY();
+
+        this.linePath
+            .transition()
+            .duration(600)
+                .attr("d", this.line);
     }
 }

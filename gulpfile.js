@@ -15,18 +15,34 @@ const ASSETS_PATH = `${DEST_PATH}/assets`;
 gulp.task("default", [ "build" ]);
 
 gulp.task("clean", () => {
-    return gulp.src(DEST_PATH)
-               .pipe(rimraf());
+    if (DEV_MODE) {
+        return gulp.src([ DEST_PATH, `!${ASSETS_PATH}/vendor.js`])
+                   .pipe(rimraf());
+    }
+    else {
+        return gulp.src(DEST_PATH)
+                   .pipe(rimraf());
+    }
 });
 
 gulp.task("build", [ "clean" ], (cb) => {
-    runSequence(
-        "build-vendor",
-        "build-less",
-        "build-js",
-        "build-html",
-        cb
-    );
+    if (DEV_MODE) {
+        runSequence(
+            "build-less",
+            "build-js",
+            "build-html",
+            cb
+        );
+    }
+    else {
+        runSequence(
+            "build-vendor",
+            "build-less",
+            "build-js",
+            "build-html",
+            cb
+        );
+    }
 });
 
 gulp.task("build-vendor", () => {
@@ -36,7 +52,7 @@ gulp.task("build-vendor", () => {
         "./node_modules/jquery.transit/jquery.transit.js",
         `${SRC_PATH}/lib/d3.min.js`
     ]).pipe(uglify())
-      .pipe(concat("ventor.js"))
+      .pipe(concat("vendor.js"))
       .pipe(gulp.dest(ASSETS_PATH));
 });
 
@@ -49,7 +65,7 @@ gulp.task("build-less", () => {
     }
     else {
         // TODO
-        return;
+        return chain.pipe(gulp.dest(`${ASSETS_PATH}/res`));
     }
 });
 
@@ -69,7 +85,8 @@ gulp.task("build-js", () => {
     }
     else {
         // TODO
-        return;
+        return chain.pipe(rename("index.js"))
+                    .pipe(gulp.dest(`${ASSETS_PATH}/app`));
     }
 });
 
