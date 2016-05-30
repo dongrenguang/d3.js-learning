@@ -1,7 +1,6 @@
-import Chart from "./chart/Chart";
 import LineChart from "./chart/LineChart";
+import PieChart from "./chart/PieChart";
 import StackAreaChart from "./chart/StackAreaChart";
-import XYAxisChart from "./chart/XYAxisChart";
 
 export default class Application {
     constructor(props) {
@@ -25,6 +24,7 @@ export default class Application {
         // this._displayLineChart();
         this._displayStackAreaChart();
 
+        this._displayPieChart();
     }
 
     _displayLineChart() {
@@ -45,7 +45,7 @@ export default class Application {
         ];
 
         const lineChart = new LineChart({
-            id: "xyAxisChart",
+            id: "lineChart",
             width: 600,
             height: 350,
             padding: {
@@ -90,7 +90,7 @@ export default class Application {
         ];
         const data = this._dataPreprocess(rawData);
         const stackAreaChart = new StackAreaChart({
-            id: "xyAxisChart",
+            id: "stackAreaChart",
             width: 600,
             height: 350,
             padding: {
@@ -142,5 +142,22 @@ export default class Application {
         });
 
         return result;
+    }
+
+    _displayPieChart() {
+        const pieChart = new PieChart({
+            id: "pieChart",
+            width: 600,
+            height: 350,
+            padding: {
+                top: 20,
+                right: 20,
+                bottom: 30,
+                left: 30
+            }
+        });
+
+        pieChart.render();
+        this.$bottom.append(pieChart.$element);
     }
 }
