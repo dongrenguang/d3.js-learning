@@ -35,7 +35,8 @@ gulp.task("build-vendor", () => {
         "./node_modules/jquery/dist/jquery.js",
         "./node_modules/jquery.transit/jquery.transit.js",
         `${SRC_PATH}/lib/d3.min.js`
-    ]).pipe(uglify())
+    ])
+    // .pipe(uglify())
       .pipe(concat("vendor.js"))
       .pipe(hash())
       .pipe(gulp.dest(ASSETS_PATH))

@@ -1,9 +1,38 @@
 import LineChart from "./chart/LineChart";
+import StackAreaChart from "./chart/StackAreaChart";
 
 export default class Application {
     run() {
         console.log("The application is running now ...");
 
+        this._displayStackAreaChart();
+    }
+
+    _displayStackAreaChart() {
+        const data = [
+            { month: 0, a: 10, b: 50, c: 40 },
+            { month: 1, a: 20, b: 40, c: 40 },
+            { month: 2, a: 40, b: 10, c: 50 },
+            { month: 3, a: 30, b: 30, c: 40 },
+            { month: 4, a: 20, b: 50, c: 30 },
+            { month: 5, a: 25, b: 45, c: 30 },
+            { month: 6, a: 45, b: 20, c: 35 },
+            { month: 7, a: 20, b: 55, c: 25 },
+            { month: 8, a: 10, b: 45, c: 45 },
+            { month: 9, a: 30, b: 30, c: 40 },
+            { month: 10, a: 35, b: 20, c: 45 },
+            { month: 11, a: 30, b: 20, c: 50 },
+            { month: 12, a: 35, b: 20, c: 45 }
+        ];
+        const stackAreaChart = new StackAreaChart({
+            width: 700,
+            height: 400,
+            margin: { top: 20, right: 20, bottom: 30, left: 50 },
+            data,
+        });
+    }
+
+    _displayLineChart() {
         const initData = [
             { month: 0, value: 5 },
             { month: 1, value: 5 },
