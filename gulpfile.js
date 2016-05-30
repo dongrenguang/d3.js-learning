@@ -36,7 +36,7 @@ gulp.task("build-vendor", () => {
         "./node_modules/jquery.transit/jquery.transit.js",
         `${SRC_PATH}/lib/d3.min.js`
     ])
-    // .pipe(uglify())
+    //   .pipe(uglify())
       .pipe(concat("vendor.js"))
       .pipe(hash())
       .pipe(gulp.dest(ASSETS_PATH))
@@ -106,7 +106,7 @@ gulp.task("watch-js", () => {
 });
 
 gulp.task("watch-less", () => {
-    gulp.watch(`${SRC_PATH}/app/res/*.less`, [ "build-less" ]);
+    gulp.watch(`${SRC_PATH}/**/*.less`, [ "build-less" ]);
 });
 
 gulp.task("server:start", () => {

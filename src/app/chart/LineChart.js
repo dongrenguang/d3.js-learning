@@ -1,16 +1,27 @@
-import Chart from "./Chart";
+import XYAxisChart from "./XYAxisChart";
 
-export default class LineChart extends Chart {
+export default class LineChart extends XYAxisChart {
     constructor(props) {
         super(props);
-
+        this.data = props.data;
         this.xPath = props.xPath;
         this.yPath = props.yPath;
-        this.render();
     }
 
     render() {
+        super.render();
         this._renderLine();
+    }
+
+    _init() {
+        super._init();
+
+        this.line = d3.svg.line()
+            .interpolate("cardinal")
+            .tension(0.9)
+            .x(d => this.scaleX(d[this.xPath]))
+            .y(d => this.scaleY(d[this.yPath]));
+
     }
 
     _renderLine() {
@@ -19,9 +30,6 @@ export default class LineChart extends Chart {
                 .classed("line", true)
                 .datum(this.data);
         }
-
-        super._renderAxisX();
-        super._renderAxisY();
 
         this.linePath
             .transition()
