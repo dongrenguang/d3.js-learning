@@ -74,19 +74,19 @@ export default class Application {
 
     _displayStackAreaChart() {
         const rawData = [
-            { month: 0, a: 10, b: 50, c: 40 },
-            { month: 1, a: 20, b: 40, c: 40 },
-            { month: 2, a: 40, b: 10, c: 50 },
-            { month: 3, a: 30, b: 30, c: 40 },
-            { month: 4, a: 20, b: 50, c: 30 },
-            { month: 5, a: 25, b: 45, c: 30 },
-            { month: 6, a: 45, b: 20, c: 35 },
-            { month: 7, a: 20, b: 55, c: 25 },
-            { month: 8, a: 10, b: 45, c: 45 },
-            { month: 9, a: 30, b: 30, c: 40 },
-            { month: 10, a: 35, b: 20, c: 45 },
-            { month: 11, a: 30, b: 20, c: 50 },
-            { month: 12, a: 35, b: 20, c: 45 }
+            { month: 0, A: 10, B: 50, C: 40 },
+            { month: 1, A: 20, B: 40, C: 40 },
+            { month: 2, A: 40, B: 10, C: 50 },
+            { month: 3, A: 30, B: 30, C: 40 },
+            { month: 4, A: 20, B: 50, C: 30 },
+            { month: 5, A: 25, B: 45, C: 30 },
+            { month: 6, A: 45, B: 20, C: 35 },
+            { month: 7, A: 20, B: 55, C: 25 },
+            { month: 8, A: 10, B: 45, C: 45 },
+            { month: 9, A: 30, B: 30, C: 40 },
+            { month: 10, A: 35, B: 20, C: 45 },
+            { month: 11, A: 30, B: 20, C: 50 },
+            { month: 12, A: 35, B: 20, C: 45 }
         ];
         const data = this._dataPreprocess(rawData);
         const stackAreaChart = new StackAreaChart({
@@ -109,9 +109,9 @@ export default class Application {
     }
 
     _dataPreprocess(data) {
-        const aPath = "a";
-        const bPath = "b";
-        const cPath = "c";
+        const aPath = "A";
+        const bPath = "B";
+        const cPath = "C";
         const result = [
             {
                 name: aPath,
@@ -145,6 +145,20 @@ export default class Application {
     }
 
     _displayPieChart() {
+        const data = [
+            {
+                name: "A",
+                percent: 50
+            },
+            {
+                name: "B",
+                percent: 20
+            },
+            {
+                name: "C",
+                percent: 30
+            }
+        ];
         const pieChart = new PieChart({
             id: "pieChart",
             width: 600,
@@ -154,10 +168,21 @@ export default class Application {
                 right: 20,
                 bottom: 30,
                 left: 30
-            }
+            },
+            data,
+            titlePath: "name",
+            valuePath: "percent"
         });
 
         pieChart.render();
         this.$bottom.append(pieChart.$element);
+
+        setTimeout(() => {
+            data[0]["percent"] = 40;
+            data[1]["percent"] = 40;
+            data[2]["percent"] = 20;
+
+            pieChart.render();
+        }, 1000);
     }
 }
