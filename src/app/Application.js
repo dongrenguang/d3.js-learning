@@ -1,6 +1,6 @@
 import LineChart from "./chart/LineChart";
 import PieChart from "./chart/PieChart";
-import StackAreaChart from "./chart/StackAreaChart";
+import ABCStackAreaChart from "./chart/ABCStackAreaChart";
 
 export default class Application {
     constructor(props) {
@@ -22,7 +22,7 @@ export default class Application {
         console.log("The application is running now ...");
 
         // this._displayLineChart();
-        this._displayStackAreaChart();
+        this._displayABCStackAreaChart();
 
         this._displayPieChart();
     }
@@ -72,7 +72,7 @@ export default class Application {
         }, 1000);
     }
 
-    _displayStackAreaChart() {
+    _displayABCStackAreaChart() {
         const rawData = [
             { month: 0, A: 10, B: 50, C: 40 },
             { month: 1, A: 20, B: 40, C: 40 },
@@ -89,8 +89,8 @@ export default class Application {
             { month: 12, A: 35, B: 20, C: 45 }
         ];
         const data = this._dataPreprocess(rawData);
-        const stackAreaChart = new StackAreaChart({
-            id: "stackAreaChart",
+        const abcStackAreaChart = new ABCStackAreaChart({
+            id: "abcStackAreaChart",
             width: 600,
             height: 350,
             padding: {
@@ -104,8 +104,8 @@ export default class Application {
             data,
         });
 
-        stackAreaChart.render();
-        this.$top.append(stackAreaChart.$element);
+        abcStackAreaChart.render();
+        this.$top.append(abcStackAreaChart.$element);
     }
 
     _dataPreprocess(data) {
@@ -176,13 +176,5 @@ export default class Application {
 
         pieChart.render();
         this.$bottom.append(pieChart.$element);
-
-        setTimeout(() => {
-            data[0]["percent"] = 40;
-            data[1]["percent"] = 40;
-            data[2]["percent"] = 20;
-
-            pieChart.render();
-        }, 1000);
     }
 }
