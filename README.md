@@ -1,5 +1,10 @@
 # D3.js Learning
 
+## Demo
+<div align="center">
+    <img src="./art/demo.gif"  width="300px" align="center" />
+</div>
+
 ## How to install
 ``` sh
 $ npm install
