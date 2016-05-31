@@ -89,7 +89,7 @@ export default class Application {
             { month: 12, A: 35, B: 20, C: 45 }
         ];
         const data = this._dataPreprocess(rawData);
-        const abcStackAreaChart = new ABCStackAreaChart({
+        this.abcStackAreaChart = new ABCStackAreaChart({
             id: "abcStackAreaChart",
             width: 600,
             height: 350,
@@ -102,10 +102,18 @@ export default class Application {
             domainX: [0, 12],
             domainY: [0, 100],
             data,
+            onSvgClick: this._updatePieChart.bind(this)
         });
 
-        abcStackAreaChart.render();
-        this.$top.append(abcStackAreaChart.$element);
+        this.abcStackAreaChart.render();
+        this.$top.append(this.abcStackAreaChart.$element);
+    }
+
+    _updatePieChart(percents) {
+        this.pieData[0]["percent"] = percents[0]["percent"];
+        this.pieData[1]["percent"] = percents[1]["percent"];
+        this.pieData[2]["percent"] = percents[2]["percent"];
+        this.pieChart.render();
     }
 
     _dataPreprocess(data) {
@@ -145,7 +153,7 @@ export default class Application {
     }
 
     _displayPieChart() {
-        const data = [
+        this.pieData = [
             {
                 name: "A",
                 percent: 50
@@ -159,7 +167,7 @@ export default class Application {
                 percent: 30
             }
         ];
-        const pieChart = new PieChart({
+        this.pieChart = new PieChart({
             id: "pieChart",
             width: 600,
             height: 350,
@@ -169,12 +177,12 @@ export default class Application {
                 bottom: 30,
                 left: 30
             },
-            data,
+            data: this.pieData,
             titlePath: "name",
             valuePath: "percent"
         });
 
-        pieChart.render();
-        this.$bottom.append(pieChart.$element);
+        this.pieChart.render();
+        this.$bottom.append(this.pieChart.$element);
     }
 }

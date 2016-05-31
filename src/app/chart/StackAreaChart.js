@@ -27,14 +27,16 @@ export default class StackAreaChart extends XYAxisChart {
     }
 
     _renderStackAreaChart() {
-        if (this.stackPath === undefined) {
-            this.stackPath = this.bodyGroup
-                .selectAll("path")
-                .data(this.areaStack(this.data))
-                .enter()
-                .append("path")
-                    .attr("class", item => `area ${item.name}`);
-        }
+        this.stackPath = this.bodyGroup
+            .selectAll("path")
+            .data(this.areaStack(this.data));
+
+        this.stackPath
+            .enter()
+            .append("path")
+                .attr("class", item => `area ${item.name}`);
+
+        this.stackPath.exit().remove();
 
         this.stackPath
             .attr("d", d => this.area(d.values))
