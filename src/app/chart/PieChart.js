@@ -28,7 +28,7 @@ export default class PieChart extends Chart {
     render() {
         super.render();
         this._renderPie();
-        this._renderLabel();
+        this._renderLabels();
     }
 
     _renderPie() {
@@ -64,31 +64,7 @@ export default class PieChart extends Chart {
             });
     }
 
-    _renderLabel() {
-        if (this.labelGroup === undefined) {
-            this.labelGroup = this.contentGroup
-                .append("g")
-                .classed("label-group", true)
-                .attr("transform", `translate(${(this.width - this.padding.left - this.padding.right) / 2}, ${(this.height - this.padding.top - this.padding.bottom) / 2})`);
-        }
-
-        this.texts = this.labelGroup
-            .selectAll("text.label")
-            .data(this.pie(this.data), d => d.data[this.labelPath]);
-
-        this.texts
-            .enter()
-            .append("text")
-                .classed("label", true);
-
-        this.texts.exit().remove();
-
-        this.texts
-            .style("fill", "white")
-            .transition()
-            .attr("transform", d => `translate(${this.arc.centroid(d)})`)
-            .attr("dy", ".35em")
-            .style("font-size", "20px")
-            .text(d => d.data[this.labelPath]);
+    _renderLabels() {
+        // To be override
     }
 }

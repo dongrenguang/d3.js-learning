@@ -8,8 +8,7 @@ export default class ABCStackAreaChart extends StackAreaChart {
 
     render() {
         super.render();
-        this._renderLabel();
-        this._renderIndicator();
+        this._renderLabels();
     }
 
     _init() {
@@ -20,10 +19,14 @@ export default class ABCStackAreaChart extends StackAreaChart {
                 position[1] > this.padding.top && position[1] < this.height - this.padding.bottom)
             {
                 this._renderActiveLine(position);
+
+                const [values, positions] = this._getNearestValue(position);
+                this._renderActiveTips([values, positions]);
             }
             else
             {
                 this._renderActiveLine(null);
+                this._renderActiveTips([null, null]);
             }
         });
 
@@ -33,9 +36,11 @@ export default class ABCStackAreaChart extends StackAreaChart {
                 position[1] > this.padding.top && position[1] < this.height - this.padding.bottom)
             {
                 this._renderStableLine(position);
-                const percents = this._getNearestValue(position);
+
+                const [values, positions] = this._getNearestValue(position);
+                this._renderStableTips([values, positions]);
                 if (this.onSvgClick && (typeof this.onSvgClick === "function")) {
-                    this.onSvgClick(percents);
+                    this.onSvgClick(values);
                 }
             }
         });
@@ -45,23 +50,25 @@ export default class ABCStackAreaChart extends StackAreaChart {
         const xPosition = position[0];
         const xIndex = this.scaleX.invert(xPosition - this.padding.left);
         const nearestX = Math.round(xIndex);
-        const result = [];
+        const values = [];
+        const positions = [];
         for (let strip of this.data) {
             for (let value of strip.values) {
                 if (value.x === nearestX) {
-                    result.push({
-                        name: strip.name,
-                        percent: value.y
+                    values.push(value.y);
+                    positions.push({
+                        x: xIndex,
+                        y: (value.y + 2 * value.y0) / 2
                     });
                     break;
                 }
             }
         }
 
-        return result;
+        return [values, positions];
     }
 
-    _renderLabel() {
+    _renderLabels() {
         if (this.labelGroup === undefined) {
             this.labelGroup = this.bodyGroup.append("g").classed("label-group", true);
         }
@@ -92,8 +99,9 @@ export default class ABCStackAreaChart extends StackAreaChart {
     }
 
     _renderActiveLine(position) {
-        if (this.activeLine === undefined) {
-            this.activeLine = this.indicatorGroup.append("line").classed("active-line", true);
+        if (this.activeGroup === undefined) {
+            this.activeGroup = this.bodyGroup.append("g").classed("active-group", true);
+            this.activeLine = this.activeGroup.append("line").classed("active-line", true);
         }
 
         if (position) {
@@ -103,8 +111,8 @@ export default class ABCStackAreaChart extends StackAreaChart {
                 .attr("x2", position[0] - this.padding.left)
                 .attr("y2", 0)
                 .style("stroke", "white")
-                .style("stroke-width", 1)
-                .style("opacity", 0.9);
+                .style("stroke-width", 2)
+                .style("opacity", 0.7);
         }
         else {
             this.activeLine
@@ -113,23 +121,68 @@ export default class ABCStackAreaChart extends StackAreaChart {
     }
 
     _renderStableLine(position) {
-        if (this.stableLine === undefined) {
-            this.stableLine = this.indicatorGroup.append("line").classed("stable-line", true);
+        if (this.stableGroup === undefined) {
+            this.stableGroup = this.bodyGroup.append("g").classed("stable-group", true);
+            this.stableLine = this.stableGroup.append("line").classed("stable-line", true);
         }
 
         this.stableLine
+            .style("stroke", "white")
+            .style("stroke-width", 2)
             .transition()
             .attr("x1", position[0] - this.padding.left)
             .attr("y1", this.height - this.padding.bottom - this.padding.top)
             .attr("x2", position[0] - this.padding.left)
-            .attr("y2", 0)
-            .style("stroke", "white")
-            .style("stroke-width", 2);
+            .attr("y2", 0);
     }
 
-    _renderIndicator() {
-        if (this.indicatorGroup === undefined) {
-            this.indicatorGroup = this.bodyGroup.append("g").classed("indicator-group", true);
+    _renderActiveTips([values, positions]) {
+        if (this.activeGroup && values && positions) {
+            this.activeTipTexts = this.activeGroup
+                .selectAll("text.tip")
+                .data(this.data);
+
+            this.activeTipTexts
+                .enter()
+                .append("text")
+                .classed("tip", true);
+
+            this.activeTipTexts
+                .text((d, i) => `${values[i]}%`)
+                .style("font-size", 16)
+                .style("stroke", null)
+                .style("fill", "black")
+                .style("opacity", 0.7)
+                .attr("dx", "0.2em")
+                .attr("dy", "0.4em")
+                .attr("transform", (d, i) => `translate(${this.scaleX(positions[i]["x"])}, ${this.scaleY(positions[i]["y"])})`);
+        }
+        else if (this.activeTipTexts){
+            this.activeTipTexts
+                .style("opacity", 0);
+        }
+    }
+
+    _renderStableTips([values, positions]) {
+        if (this.stableGroup && values && positions) {
+            this.stableTipTexts = this.stableGroup
+                .selectAll("text.tip")
+                .data(this.data);
+
+            this.stableTipTexts
+                .enter()
+                .append("text")
+                .classed("tip", true);
+
+            this.stableTipTexts
+                .text((d, i) => `${values[i]}%`)
+                .style("font-size", 16)
+                .style("stroke", null)
+                .style("fill", "black")
+                .attr("dx", "0.2em")
+                .attr("dy", "0.4em")
+                .transition()
+                .attr("transform", (d, i) => `translate(${this.scaleX(positions[i]["x"])}, ${this.scaleY(positions[i]["y"])})`);
         }
     }
 }

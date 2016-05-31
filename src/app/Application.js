@@ -1,5 +1,5 @@
 import LineChart from "./chart/LineChart";
-import PieChart from "./chart/PieChart";
+import ABCPieChart from "./chart/ABCPieChart";
 import ABCStackAreaChart from "./chart/ABCStackAreaChart";
 
 export default class Application {
@@ -24,7 +24,7 @@ export default class Application {
         // this._displayLineChart();
         this._displayABCStackAreaChart();
 
-        this._displayPieChart();
+        this._displayABCPieChart();
     }
 
     _displayLineChart() {
@@ -95,25 +95,25 @@ export default class Application {
             height: 350,
             padding: {
                 top: 20,
-                right: 20,
+                right: 40,
                 bottom: 30,
                 left: 30
             },
             domainX: [0, 12],
             domainY: [0, 100],
             data,
-            onSvgClick: this._updatePieChart.bind(this)
+            onSvgClick: this._updateABCPieChart.bind(this)
         });
 
         this.abcStackAreaChart.render();
         this.$top.append(this.abcStackAreaChart.$element);
     }
 
-    _updatePieChart(percents) {
-        this.pieData[0]["percent"] = percents[0]["percent"];
-        this.pieData[1]["percent"] = percents[1]["percent"];
-        this.pieData[2]["percent"] = percents[2]["percent"];
-        this.pieChart.render();
+    _updateABCPieChart(percents) {
+        this.pieData[0]["percent"] = percents[0];
+        this.pieData[1]["percent"] = percents[1];
+        this.pieData[2]["percent"] = percents[2];
+        this.abcPieChart.render();
     }
 
     _dataPreprocess(data) {
@@ -152,7 +152,7 @@ export default class Application {
         return result;
     }
 
-    _displayPieChart() {
+    _displayABCPieChart() {
         this.pieData = [
             {
                 name: "A",
@@ -167,7 +167,7 @@ export default class Application {
                 percent: 30
             }
         ];
-        this.pieChart = new PieChart({
+        this.abcPieChart = new ABCPieChart({
             id: "pieChart",
             width: 600,
             height: 350,
@@ -182,7 +182,7 @@ export default class Application {
             valuePath: "percent"
         });
 
-        this.pieChart.render();
-        this.$bottom.append(this.pieChart.$element);
+        this.abcPieChart.render();
+        this.$bottom.append(this.abcPieChart.$element);
     }
 }
