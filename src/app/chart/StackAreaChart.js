@@ -30,18 +30,18 @@ export default class StackAreaChart extends XYAxisChart {
         if (this.stackGroup === undefined) {
             this.stackGroup = this.bodyGroup.append("g").classed("stack-group", true);
         }
-        this.stackPath = this.stackGroup
+        this.stackPaths = this.stackGroup
             .selectAll("path")
             .data(this.areaStack(this.data));
 
-        this.stackPath
+        this.stackPaths
             .enter()
             .append("path")
                 .attr("class", item => `area ${item.name}`);
 
-        this.stackPath.exit().remove();
+        this.stackPaths.exit().remove();
 
-        this.stackPath
+        this.stackPaths
             .attr("d", d => this.area(d.values))
             .style("fill", (d, i) => this.colorScale(i));
     }

@@ -8,7 +8,8 @@ export default class ABCStackAreaChart extends StackAreaChart {
 
     render() {
         super.render();
-        // this._renderTitles();
+        this._renderLabel();
+        this._renderIndicator();
     }
 
     _init() {
@@ -60,33 +61,39 @@ export default class ABCStackAreaChart extends StackAreaChart {
         return result;
     }
 
-    _renderTitles() {
-        if (this.titleGroup === undefined) {
-            this.titleGroup = this.contentGroup.append("g").classed("title-group", true);
+    _renderLabel() {
+        if (this.labelGroup === undefined) {
+            this.labelGroup = this.bodyGroup.append("g").classed("label-group", true);
         }
 
-        this.titleTexts = this.titleGroup
-            .selectAll("text.title")
+        this.labelTexts = this.labelGroup
+            .selectAll("text.label")
             .data(this.data);
 
-        this.titleTexts
+        this.labelTexts
             .enter()
             .append("text")
-                .classed("title", true);
+                .classed("label", true);
 
-        this.titleTexts.exit().remove();
+        this.labelTexts.exit().remove();
 
-        this.titleTexts
+        const positions = [];
+        for (let strip of this.data) {
+            positions.push((strip.values[0]["y"] + 2 * strip.values[0]["y0"]) / 2);
+        }
+
+        this.labelTexts
             .text(d => d.name)
             .style("font-size", 20)
             .style("stroke", null)
             .style("fill", "white")
-            .attr("transform", (d, i) => `translate(20, 50)`);
+            .attr("dy", "0.4em")
+            .attr("transform", (d, i) => `translate(10, ${this.scaleY(positions[i])})`);
     }
 
     _renderActiveLine(position) {
         if (this.activeLine === undefined) {
-            this.activeLine = this.contentGroup.append("line").classed("active-line", true);
+            this.activeLine = this.indicatorGroup.append("line").classed("active-line", true);
         }
 
         if (position) {
@@ -107,7 +114,7 @@ export default class ABCStackAreaChart extends StackAreaChart {
 
     _renderStableLine(position) {
         if (this.stableLine === undefined) {
-            this.stableLine = this.contentGroup.append("line").classed("stable-line", true);
+            this.stableLine = this.indicatorGroup.append("line").classed("stable-line", true);
         }
 
         this.stableLine
@@ -118,5 +125,11 @@ export default class ABCStackAreaChart extends StackAreaChart {
             .attr("y2", 0)
             .style("stroke", "white")
             .style("stroke-width", 2);
+    }
+
+    _renderIndicator() {
+        if (this.indicatorGroup === undefined) {
+            this.indicatorGroup = this.bodyGroup.append("g").classed("indicator-group", true);
+        }
     }
 }

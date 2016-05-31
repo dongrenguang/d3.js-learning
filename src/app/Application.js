@@ -178,7 +178,7 @@ export default class Application {
                 left: 30
             },
             data: this.pieData,
-            titlePath: "name",
+            labelPath: "name",
             valuePath: "percent"
         });
 

@@ -4,7 +4,7 @@ export default class PieChart extends Chart {
     constructor(props) {
         super(props);
         this.data = props.data;
-        this.titlePath = props.titlePath;
+        this.labelPath = props.labelPath;
         this.valuePath = props.valuePath;
     }
 
@@ -28,7 +28,7 @@ export default class PieChart extends Chart {
     render() {
         super.render();
         this._renderPie();
-        this._renderText();
+        this._renderLabel();
     }
 
     _renderPie() {
@@ -41,7 +41,7 @@ export default class PieChart extends Chart {
 
         this.arcPaths = this.pieGroup
             .selectAll("path.arc")
-            .data(this.pie(this.data), d => d.data[this.titlePath]);
+            .data(this.pie(this.data), d => d.data[this.labelPath]);
 
         this.arcPaths
             .enter()
@@ -64,7 +64,7 @@ export default class PieChart extends Chart {
             });
     }
 
-    _renderText() {
+    _renderLabel() {
         if (this.labelGroup === undefined) {
             this.labelGroup = this.contentGroup
                 .append("g")
@@ -73,13 +73,13 @@ export default class PieChart extends Chart {
         }
 
         this.texts = this.labelGroup
-            .selectAll("text.title")
-            .data(this.pie(this.data), d => d.data[this.titlePath]);
+            .selectAll("text.label")
+            .data(this.pie(this.data), d => d.data[this.labelPath]);
 
         this.texts
             .enter()
             .append("text")
-                .classed("title", true);
+                .classed("label", true);
 
         this.texts.exit().remove();
 
@@ -89,6 +89,6 @@ export default class PieChart extends Chart {
             .attr("transform", d => `translate(${this.arc.centroid(d)})`)
             .attr("dy", ".35em")
             .style("font-size", "20px")
-            .text(d => d.data[this.titlePath]);
+            .text(d => d.data[this.labelPath]);
     }
 }
