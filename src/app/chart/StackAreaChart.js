@@ -27,7 +27,10 @@ export default class StackAreaChart extends XYAxisChart {
     }
 
     _renderStackAreaChart() {
-        this.stackPath = this.bodyGroup
+        if (this.stackGroup === undefined) {
+            this.stackGroup = this.bodyGroup.append("g").classed("stack-group", true);
+        }
+        this.stackPath = this.stackGroup
             .selectAll("path")
             .data(this.areaStack(this.data));
 
