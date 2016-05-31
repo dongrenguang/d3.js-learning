@@ -65,25 +65,30 @@ export default class PieChart extends Chart {
     }
 
     _renderText() {
-        if (this.pieGroup) {
-            this.texts = this.pieGroup
-                .selectAll("text.title")
-                .data(this.pie(this.data), d => d.data[this.titlePath]);
-
-            this.texts
-                .enter()
-                .append("text")
-                    .classed("title", true);
-
-            this.texts.exit().remove();
-
-            this.texts
-                .style("fill", "white")
-                .transition()
-                .attr("transform", d => `translate(${this.arc.centroid(d)})`)
-                .attr("dy", ".35em")
-                .style("font-size", "20px")
-                .text(d => d.data[this.titlePath]);
+        if (this.labelGroup === undefined) {
+            this.labelGroup = this.contentGroup
+                .append("g")
+                .classed("label-group", true)
+                .attr("transform", `translate(${(this.width - this.padding.left - this.padding.right) / 2}, ${(this.height - this.padding.top - this.padding.bottom) / 2})`);
         }
+
+        this.texts = this.labelGroup
+            .selectAll("text.title")
+            .data(this.pie(this.data), d => d.data[this.titlePath]);
+
+        this.texts
+            .enter()
+            .append("text")
+                .classed("title", true);
+
+        this.texts.exit().remove();
+
+        this.texts
+            .style("fill", "white")
+            .transition()
+            .attr("transform", d => `translate(${this.arc.centroid(d)})`)
+            .attr("dy", ".35em")
+            .style("font-size", "20px")
+            .text(d => d.data[this.titlePath]);
     }
 }
