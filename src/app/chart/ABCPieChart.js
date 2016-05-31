@@ -31,6 +31,6 @@ export default class ABCPieChart extends PieChart {
             .attr("text-anchor", "middle")
             .attr("dy", "0.4em")
             .style("font-size", "18px")
-            .text(d => `${d.data[this.labelPath]}  ${d.data[this.valuePath]}%`);
+            .text(d => `${d.data[this.labelPath]}, ${d.data[this.valuePath]}%`);
     }
 }

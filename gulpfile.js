@@ -31,17 +31,31 @@ gulp.task("build", [ "clean" ], (cb) => {
 });
 
 gulp.task("build-vendor", () => {
-    return gulp.src([
-        "./node_modules/jquery/dist/jquery.js",
-        "./node_modules/jquery.transit/jquery.transit.js",
-        `${SRC_PATH}/lib/d3.min.js`
-    ])
-    //   .pipe(uglify())
-      .pipe(concat("vendor.js"))
-      .pipe(hash())
-      .pipe(gulp.dest(ASSETS_PATH))
-      .pipe(hash.manifest("manifest.json", true))
-      .pipe(gulp.dest(ASSETS_PATH));
+    if (DEV_MODE) {
+        return gulp.src([
+            "./node_modules/jquery/dist/jquery.js",
+            "./node_modules/jquery.transit/jquery.transit.js",
+            `${SRC_PATH}/lib/d3.min.js`
+        ])
+          .pipe(concat("vendor.js"))
+          .pipe(hash())
+          .pipe(gulp.dest(ASSETS_PATH))
+          .pipe(hash.manifest("manifest.json", true))
+          .pipe(gulp.dest(ASSETS_PATH));
+    }
+    else {
+        return gulp.src([
+            "./node_modules/jquery/dist/jquery.js",
+            "./node_modules/jquery.transit/jquery.transit.js",
+            `${SRC_PATH}/lib/d3.min.js`
+        ])
+          .pipe(uglify())
+          .pipe(concat("vendor.js"))
+          .pipe(hash())
+          .pipe(gulp.dest(ASSETS_PATH))
+          .pipe(hash.manifest("manifest.json", true))
+          .pipe(gulp.dest(ASSETS_PATH));
+    }
 });
 
 gulp.task("build-less", () => {

@@ -1,16 +1,15 @@
-import LineChart from "./chart/LineChart";
 import ABCPieChart from "./chart/ABCPieChart";
 import ABCStackAreaChart from "./chart/ABCStackAreaChart";
 
 export default class Application {
     constructor(props) {
         this._init();
+        this.chartWidth = 600;
+        this.chartHeight = 350;
     }
 
     _init() {
-        const width = 600;
-        const height = 700;
-        this.$tile = $(`<div class=tile width=${width} height=${height} />`);
+        this.$tile = $(`<div class=tile width=${this.chartWidth} height=${this.chartHeight * 2} />`);
         this.$top = $(`<div class=top />`);
         this.$bottom = $(`<div class=bottom />`);
         $("body").append(this.$tile);
@@ -21,9 +20,7 @@ export default class Application {
     run() {
         console.log("The application is running now ...");
 
-        // this._displayLineChart();
         this._displayABCStackAreaChart();
-
         this._displayABCPieChart();
     }
 
@@ -46,8 +43,8 @@ export default class Application {
 
         const lineChart = new LineChart({
             id: "lineChart",
-            width: 600,
-            height: 350,
+            width: this.chartWidth,
+            height: this.chartHeight,
             padding: {
                 top: 20,
                 right: 20,
@@ -91,13 +88,13 @@ export default class Application {
         const data = this._dataPreprocess(rawData);
         this.abcStackAreaChart = new ABCStackAreaChart({
             id: "abcStackAreaChart",
-            width: 600,
-            height: 350,
+            width: this.chartWidth,
+            height: this.chartHeight,
             padding: {
                 top: 20,
                 right: 40,
                 bottom: 30,
-                left: 30
+                left: 40
             },
             domainX: [0, 12],
             domainY: [0, 100],
@@ -169,13 +166,13 @@ export default class Application {
         ];
         this.abcPieChart = new ABCPieChart({
             id: "pieChart",
-            width: 600,
-            height: 350,
+            width: this.chartWidth,
+            height: this.chartHeight,
             padding: {
                 top: 20,
-                right: 20,
+                right: 40,
                 bottom: 30,
-                left: 30
+                left: 40
             },
             data: this.pieData,
             labelPath: "name",
