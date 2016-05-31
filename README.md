@@ -2,7 +2,7 @@
 
 ## Demo
 <div align="center">
-    <img src="./art/demo.gif"  width="300px" align="center" />
+    <img src="./art/demo.gif"  width="500px" align="center" />
 </div>
 
 ## How to install
