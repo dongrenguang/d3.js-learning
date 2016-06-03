@@ -7,7 +7,10 @@ export default class Chart {
     }
 
     render() {
-        this._init();
+        if (this._haveInit === undefined) {
+            this._haveInit = true;
+            this._init();
+        }
     }
 
     _init() {
